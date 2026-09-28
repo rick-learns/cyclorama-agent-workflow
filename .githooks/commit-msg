@@ -1,0 +1,10 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: 2026 rick-learns
+# SPDX-License-Identifier: Apache-2.0
+#
+# Opt-in per clone (the setting is shared by all worktrees of the clone):
+#   git config core.hooksPath .githooks
+# Conventional Commits header + Verified trailer policy (<1 s). See tools/commit-msg.ts.
+# Branches that predate the checker have no tools/commit-msg.ts: let them commit.
+[ -f tools/commit-msg.ts ] || exit 0
+exec node --disable-warning=ExperimentalWarning tools/commit-msg.ts "$1"

@@ -1,0 +1,8 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: 2026 rick-learns
+# SPDX-License-Identifier: Apache-2.0
+#
+# Opt-in per clone (the setting is shared by all worktrees of the clone):
+#   git config core.hooksPath .githooks
+# Staged-file policy, secret scan, typecheck, canon check (~4 s). See tools/precommit.ts.
+exec node --disable-warning=ExperimentalWarning tools/precommit.ts

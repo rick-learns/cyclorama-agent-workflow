@@ -1,0 +1,39 @@
+# SPDX-FileCopyrightText: 2026 rick-learns
+# SPDX-License-Identifier: Apache-2.0
+#
+# The guard, hook, lock and policy tests, the typecheck and the skills lint on GitHub-hosted
+# Ubuntu, Windows and macOS (the agents worked on a Mac and a Windows PC, and several hooks carry
+# Windows-specific fixes). The macOS job runs only when the repository is public: hosted runners are
+# free there, and a private repository bills macOS minutes at 10x.
+name: test
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJSON(github.event.repository.private && '["ubuntu-24.04","windows-latest"]' || '["ubuntu-24.04","windows-latest","macos-latest"]') }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0 # the lock and policy tests build throwaway git repos; git must be configured
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: git config --global user.name ci && git config --global user.email ci@example.invalid
+      - run: npm run typecheck
+      - run: npm run skills:lint
+      - run: npm test

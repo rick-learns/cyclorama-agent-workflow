@@ -1,0 +1,20 @@
+{
+  "name": "cyclorama-agent-workflow",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The agent workflow that built the Avenell Cyclorama: Claude Code skills, agent roles, guard hooks and the process research behind them",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "node --disable-warning=ExperimentalWarning --test tests/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json",
+    "skills:lint": "node --disable-warning=ExperimentalWarning tools/skills-lint.ts"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.0",
+    "typescript": "5.9.3"
+  }
+}
